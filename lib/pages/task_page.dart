@@ -23,14 +23,14 @@ class _ItemPageState extends State<ItemPage> {
           Item(title: newTaskCtrl.text, done: false),
         );
         newTaskCtrl.text = "";
-        widget.bloc.save(widget.items);
+        // save();
       }
     });
   }
 
   void remove(int index) {
     widget.items.removeAt(index);
-    widget.bloc.save(widget.items);
+    // save();
   }
 
   // save() async {
@@ -38,23 +38,23 @@ class _ItemPageState extends State<ItemPage> {
   //   await prefs.setString('data', jsonEncode(widget.items));
   // }
 
-  // Le os itens do shared_prefenrences
-  Future load() async {
-    var prefs = await SharedPreferences.getInstance();
-    var data = prefs.getString('data');
+  // // Le os itens do shared_prefenrences
+  // Future load() async {
+  //   var prefs = await SharedPreferences.getInstance();
+  //   var data = prefs.getString('data');
 
-    if (data != null) {
-      Iterable decoded = jsonDecode(data);
-      List<Item> result = decoded.map((x) => Item.fromJson(x)).toList();
-      setState(() {
-        widget.items = result;
-      });
-    }
-  }
+  //   if (data != null) {
+  //     Iterable decoded = jsonDecode(data);
+  //     List<Item> result = decoded.map((x) => Item.fromJson(x)).toList();
+  //     setState(() {
+  //       widget.items = result;
+  //     });
+  //   }
+  // }
 
-  _HomePageState() {
-    load();
-  }
+  // _HomePageState() {
+  //   load();
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -87,7 +87,7 @@ class _ItemPageState extends State<ItemPage> {
                 // Altera o valor do checkBox
                 setState(() {
                   data.done = value;
-                  widget.bloc.save(widget.items);
+                  // save();
                 });
               },
             ),
