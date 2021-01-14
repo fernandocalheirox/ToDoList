@@ -1,28 +1,23 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:todo_list/bloc/shared_preferences_bloc.dart';
 import 'package:todo_list/models/lista_models.dart';
 import 'package:todo_list/pages/task_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ListPage extends StatefulWidget {
   List<Lista> lista = List<Lista>();
-  // ListPage() {
-  //   lista.add(Lista(nome: "Faculdade"));
-  //   lista.add(Lista(nome: "Faculdade"));
-  //   lista.add(Lista(nome: "Faculdade"));
-  //   lista.add(Lista(nome: "Faculdade"));
-  // }
+  SharedBloc bloc;
+  ListPage() {
+    bloc = SharedBloc();
+  }
   @override
   _ListPageState createState() => _ListPageState();
 }
 
 class _ListPageState extends State<ListPage> {
   var newListCtrl = TextEditingController();
-
-  _ListPageState() {
-    load();
-  }
 
   void add() {
     setState(() {
@@ -31,33 +26,12 @@ class _ListPageState extends State<ListPage> {
           Lista(nome: newListCtrl.text),
         );
         newListCtrl.text = "";
-        // save();
       }
     });
   }
 
   void remove(int index) {
     widget.lista.removeAt(index);
-    save();
-  }
-
-  save() async {
-    var prefs = await SharedPreferences.getInstance();
-    await prefs.setString('data', jsonEncode(widget.lista));
-  }
-
-  // Le os itens do shared_prefenrences
-  Future load() async {
-    var prefs = await SharedPreferences.getInstance();
-    var data = prefs.getString('data');
-
-    if (data != null) {
-      Iterable decoded = jsonDecode(data);
-      List<Lista> result = decoded.map((x) => Lista.fromJson(x)).toList();
-      setState(() {
-        widget.lista = result;
-      });
-    }
   }
 
   @override
@@ -90,13 +64,13 @@ class _ListPageState extends State<ListPage> {
       body: ListView.builder(
         itemCount: widget.lista.length,
         itemBuilder: (BuildContext context, int index) {
+          final data = widget.lista[index];
           return GestureDetector(
             onTap: () {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) =>
-                      ItemPage(items: widget.lista[index].items),
+                  builder: (context) => ItemPage(items: data.items),
                 ),
               );
             },
@@ -115,7 +89,7 @@ class _ListPageState extends State<ListPage> {
                   children: [
                     Container(
                       child: Text(
-                        widget.lista[index].nome,
+                        data.nome,
                         style: TextStyle(fontSize: 21),
                       ),
                     ),
